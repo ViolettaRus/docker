@@ -30,4 +30,4 @@ ENV PATH=/root/.local/bin:$PATH \
 # ENV DATABASE_URL=mysql://user:pass@mysql:3306/dbname
 
 EXPOSE 5000
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5001", "app:app"]
