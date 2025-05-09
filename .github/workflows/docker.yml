@@ -1,35 +1,34 @@
 name: Docker CI/CD
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main ]
 
 jobs:
-  build:
-    runs-on: macos-latest
+  build-and-push:
+    runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+    
+    - name: Set up Buildx
+      uses: docker/setup-buildx-action@v2
     
     - name: Login to Docker Hub
-      if: github.ref == 'refs/heads/main'
-      uses: docker/login-action@v1
+      uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
     
     - name: Build and push
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v3
       with:
         context: .
-        push: ${{ github.ref == 'refs/heads/main' }}
+        push: true
         tags: |
-          vi02/flask-app:latest
-          vi02/flask-app:${{ github.sha }}
-    
-    - name: Deploy to server
-      if: github.ref == 'refs/heads/main'
-      run: |
-        ssh ${{ secrets.SSH_HOST }} "
-          docker pull vi02/flask-app:latest &&
-          docker-compose down &&
-          docker-compose up -d
-        "
+          yourusername/flask-app:latest
+          yourusername/flask-app:${{ github.sha }}
