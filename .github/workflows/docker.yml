@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     
     steps:
     - uses: actions/checkout@v2
@@ -26,14 +26,14 @@ jobs:
         context: .
         push: ${{ github.ref == 'refs/heads/main' }}
         tags: |
-          yourusername/flask-app:latest
-          yourusername/flask-app:${{ github.sha }}
+          vi02/flask-app:latest
+          vi02/flask-app:${{ github.sha }}
     
     - name: Deploy to server
       if: github.ref == 'refs/heads/main'
       run: |
         ssh ${{ secrets.SSH_HOST }} "
-          docker pull yourusername/flask-app:latest &&
+          docker pull vi02/flask-app:latest &&
           docker-compose down &&
           docker-compose up -d
         "
